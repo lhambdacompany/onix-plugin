@@ -10,7 +10,7 @@ Decisiones, bugs y handoffs se guardan en **Cortex** (servidor remoto), no en ar
 ## 1. Instalar el plugin
 
 ```text
-/plugin marketplace add https://github.com/lhambdacompany/onix-cortex
+/plugin marketplace add https://github.com/lhambdacompany/onix-plugin
 /plugin install cortex-memory@cortex
 /reload-plugins
 ```
