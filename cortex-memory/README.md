@@ -20,7 +20,7 @@ Claude Code → Plugin MCP → API pública HTTPS → Cortex (nube)
 ## Instalación rápida (usuarios)
 
 ```text
-/plugin marketplace add https://github.com/TU_USUARIO/cortex-plugins
+/plugin marketplace add https://github.com/TU_USUARIO/onix-plugin
 /plugin install cortex-memory@cortex
 /reload-plugins
 ```

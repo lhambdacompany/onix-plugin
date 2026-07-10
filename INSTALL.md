@@ -34,13 +34,13 @@ de Cortex. Solo este plugin y una cuenta con API Key.
 En Claude Code:
 
 ```text
-/plugin marketplace add https://github.com/lhambdacompany/onix-cortex
+/plugin marketplace add https://github.com/lhambdacompany/onix-plugin
 /plugin install cortex-memory@cortex
 /reload-plugins
 ```
 
 > Si clonaste este repo localmente, podés usar la ruta absoluta en lugar de la URL
-> de GitHub: `/plugin marketplace add C:\ruta\a\onix-cortex`
+> de GitHub: `/plugin marketplace add C:\ruta\a\onix-plugin`
 
 Verificá la conexión:
 
@@ -68,7 +68,7 @@ Copiá la clave (`onx_...`). **Solo se muestra una vez.**
 Abrí una terminal **en la carpeta de tu proyecto** (donde trabajás con Claude):
 
 ```bash
-# Si clonaste onix-cortex:
+# Si clonaste onix-plugin:
 node cortex-memory/scripts/setup-credentials.mjs
 
 # O con URL de API explícita:
