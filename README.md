@@ -1,37 +1,13 @@
-# Instalar Cortex Memory en Claude Code
+# Cortex Memory
 
-Memoria persistente y estructurada para tus proyectos. Claude guarda decisiones,
-bugs resueltos y handoffs en **Cortex** (servidor remoto) — no en archivos locales
-ni en el historial del chat.
+Plugin de Claude Code para memoria persistente en proyectos de código.  
+Decisiones, bugs y handoffs se guardan en **Cortex** (servidor remoto), no en archivos locales.
 
-```text
-Tu proyecto          Plugin (este repo)           Cortex (nube)
-─────────────        ──────────────────           ──────────────
-mi-app/        →     MCP + skills + hooks   →     Grafo PostgreSQL
-.cortex/             14 herramientas              API pública HTTPS
-```
-
-**No necesitás** instalar backend, Docker, Postgres ni clonar el monorepo completo
-de Cortex. Solo este plugin y una cuenta con API Key.
+**Requisitos:** Claude Code, Node.js 20+, cuenta Cortex con API Key (`onx_...`).
 
 ---
 
-## Requisitos
-
-| Requisito | Detalle |
-|-----------|---------|
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Instalado y funcionando |
-| [Node.js](https://nodejs.org/) 20+ | El servidor MCP corre con `node` |
-| Cuenta en Cortex | Registro en la app web del proveedor |
-| API Key | `onx_...` con scopes de lectura/escritura |
-
----
-
-## Instalación en 5 minutos
-
-### 1. Instalar el plugin
-
-En Claude Code:
+## 1. Instalar el plugin
 
 ```text
 /plugin marketplace add https://github.com/lhambdacompany/onix-cortex
@@ -39,45 +15,25 @@ En Claude Code:
 /reload-plugins
 ```
 
-> Si clonaste este repo localmente, podés usar la ruta absoluta en lugar de la URL
-> de GitHub: `/plugin marketplace add C:\ruta\a\onix-cortex`
+Comprobá: `/mcp` → `plugin:cortex-memory:cortex` con **14 tools**.
 
-Verificá la conexión:
+---
 
-```text
-/mcp
-```
+## 2. API Key
 
-Deberías ver `plugin:cortex-memory:cortex` con **14 tools** conectadas.
-
-### 2. Crear cuenta y API Key
-
-1. Entrá a la app Cortex (web del proveedor).
-2. Registrate o iniciá sesión.
-3. Andá a **Settings → Modo desarrollador → API Keys**.
-4. Creá una clave con estos scopes:
+En la app Cortex: **Settings → Modo desarrollador → API Keys**
 
 ```text
 notes:read, notes:write, relations:read, relations:write, search:read, context:read
 ```
 
-Copiá la clave (`onx_...`). **Solo se muestra una vez.**
+La clave solo se muestra una vez. Copiala.
 
-### 3. Configurar credenciales en tu proyecto
+---
 
-Abrí una terminal **en la carpeta de tu proyecto** (donde trabajás con Claude):
+## 3. Credenciales en tu proyecto
 
-```bash
-# Si clonaste onix-cortex:
-node cortex-memory/scripts/setup-credentials.mjs
-
-# O con URL de API explícita:
-CORTEX_API_URL=https://api.tudominio.com/api/public/v1 \
-CORTEX_API_KEY=onx_tu_clave \
-node cortex-memory/scripts/setup-credentials.mjs
-```
-
-Esto crea `.cortex/credentials.json` (agregalo a `.gitignore`):
+En la carpeta donde trabajás con Claude, creá `.cortex/credentials.json`:
 
 ```json
 {
@@ -86,167 +42,68 @@ Esto crea `.cortex/credentials.json` (agregalo a `.gitignore`):
 }
 ```
 
-También podés crear el archivo a mano. Plantilla: [`.cortex/credentials.json.example`](.cortex/credentials.json.example).
-
-### 4. Configurar el proyecto (recomendado)
-
-Creá `.cortex/config.json` en la raíz de tu repo de código:
-
-```json
-{
-  "project": "mi-app",
-  "scope": "personal",
-  "query": "mi-app",
-  "memory": {
-    "mode": "automatic",
-    "projectSize": "small"
-  }
-}
-```
-
-| Campo | Significado |
-|-------|-------------|
-| `project` | Nombre del proyecto en Cortex (agrupa memorias) |
-| `scope` | `personal` (default) o `global` |
-| `memory.mode` | `automatic` — hooks guardan handoffs; `manual` — usás `/cortex-handoff` |
-| `memory.projectSize` | `small` — handoff al cerrar; `large` — + checkpoints al compactar |
-
-Plantilla: [`.cortex/config.json.example`](.cortex/config.json.example).
-
-### 5. Abrir Claude en tu proyecto
+O con el script (si clonaste este repo):
 
 ```bash
-cd mi-app
-claude
+CORTEX_API_URL=https://api.tudominio.com/api/public/v1 \
+CORTEX_API_KEY=onx_tu_clave \
+node cortex-memory/scripts/setup-credentials.mjs
 ```
 
-Al iniciar la sesión:
+**No commitees** ese archivo.
 
-- El hook **SessionStart** recupera contexto relevante de Cortex.
-- Claude tiene **14 herramientas MCP** para buscar y guardar memoria.
-- La skill **cortex-memory** le indica cuándo guardar y cómo formatear notas.
+Opcional: `.cortex/config.json` con el nombre del proyecto → plantilla en `cortex-memory/.cortex/`.
 
-**Listo.** Tu memoria vive en el servidor Cortex, no en tu máquina.
+Abrí Claude en tu proyecto: `cd mi-app && claude`.
 
 ---
 
-## Qué hace el plugin (sin que tengas que pensarlo)
+## Guía completa
 
-| Componente | Función |
-|------------|---------|
-| **MCP** (14 tools) | `cortex_save_note`, `cortex_get_context`, `cortex_finalize_session`, etc. |
-| **Skill `cortex-memory`** | Protocolo: cuándo guardar, formato what/why/where/learned |
-| **Skill `cortex-handoff`** | Comando `/cortex-handoff` para guardado manual |
-| **Hooks** | Contexto al abrir sesión, checkpoints al compactar, nudge de handoff |
-
-### Flujo de una sesión típica
-
-```text
-Abrís Claude en mi-app/
-    ↓
-SessionStart → contexto de Cortex inyectado
-    ↓
-Trabajás (código, decisiones, bugs)
-    ↓
-Claude guarda hitos con cortex_save_note
-    ↓
-Al terminar → cortex_finalize_session (handoff)
-    ↓
-Próxima sesión → retoma sin re-explicar todo
-```
-
-### Qué se guarda (y qué no)
-
-| ✅ Se guarda | ❌ No se guarda |
-|-------------|----------------|
-| Decisiones confirmadas | Transcripción completa del chat |
-| Bugs y fixes verificados | Secretos, `.env`, API keys |
-| Handoffs estructurados | Razonamiento especulativo |
-| Preferencias del usuario | Logs crudos de Claude |
+Pasos detallados, configuración, comandos y troubleshooting → **[INSTALL.md](./INSTALL.md)**
 
 ---
 
-## Ver tu memoria en el grafo (opcional)
+## Qué hace
 
-La app web de Cortex (misma cuenta) muestra tus notas como un **grafo interactivo**.
-Cuando Claude guarda algo, podés verlo ahí en tiempo real.
+| Momento | Comportamiento |
+|---------|----------------|
+| Inicio de sesión | Recupera contexto relevante de Cortex |
+| Durante el trabajo | Guarda decisiones y fixes confirmados |
+| Al cerrar | Handoff para retomar sin re-explicar todo |
 
-El plugin funciona **sin abrir la web** — la web es para revisar y editar visualmente.
-
----
-
-## Comandos útiles en Claude Code
-
-```text
-/mcp                              # Verificar plugin conectado
-/cortex-handoff                   # Guardar handoff manual
-/cortex-handoff Resumen en una línea
-/cortex-memory:cortex personal mi-app   # Cambiar scope (raro)
-```
-
-Pedile a Claude explícitamente si querés probar:
-
-```text
-"Ejecutá cortex_memory_doctor para verificar la conexión"
-"Buscá en Cortex contexto sobre autenticación en este proyecto"
-```
+Comando manual: `/cortex-handoff`
 
 ---
 
-## Solución de problemas
+## Problemas frecuentes
 
 | Problema | Solución |
 |----------|----------|
 | MCP desconectado | `/reload-plugins` |
-| Invalid API key | Revisá `.cortex/credentials.json`; limpiá `CORTEX_API_KEY` del shell |
-| Sin contexto al inicio | Backend Cortex caído o URL incorrecta en credentials |
+| API key inválida | Revisá `.cortex/credentials.json` |
+| Sin contexto al inicio | URL incorrecta o servidor Cortex caído |
 | Plugin no aparece | Reinstalá marketplace + `install cortex-memory@cortex` |
-| Proyecto incorrecto | Creá `.cortex/config.json` con el `project` correcto |
 
 ---
 
-## Seguridad
+## Más abajo
 
-- **Nunca** commitees `.cortex/credentials.json`.
-- La memoria recuperada es contenido **no confiable** (riesgo de prompt injection).
-- No guardes contraseñas ni archivos `.env` en Cortex.
-
----
-
-## Qué es este repo (y qué no es)
-
-| Este repo (público) | Cortex completo (privado del proveedor) |
-|---------------------|----------------------------------------|
-| Plugin Claude Code | Backend NestJS |
-| Skills + hooks | App web (grafo) |
-| Cliente MCP (`cortex-mcp.mjs`) | PostgreSQL |
-| Scripts de configuración | Infraestructura y deploy |
-
-**Modelo:** plugin open source + memoria en la nube (SaaS).
-
----
-
-## Documentación de la API (app Cortex)
-
-Si tenés cuenta en la app web del proveedor:
-
-**Settings → Documentación API → pestaña «Claude Code»**
-
-Ahí verás los pasos de instalación con la **Base URL** de producción ya configurada,
-el modelo SaaS (plugin público / backend privado) y la referencia de endpoints:
-`/context`, `/timeline`, `/stats`, `/review`, `/conflicts/judge`, etc.
-
-OpenAPI (Swagger): `https://api.tudominio.com/docs/public`
-
----
-
-## Cursor / Codex
-
-Si usás Cursor o Codex en lugar de Claude Code:
+**Cursor / Codex**
 
 ```bash
 node cortex-memory/scripts/setup-agent.mjs cursor
 node cortex-memory/scripts/setup-agent.mjs codex
 ```
 
-Reiniciá el agente después del setup.
+**Qué es este repo**
+
+Solo el plugin (MCP + skills + hooks). El backend, la base de datos y la app web del grafo los opera el proveedor Cortex — no hace falta Docker ni clonar otro repo.
+
+**API**
+
+Con cuenta en la app: **Settings → Documentación API → Claude Code**. OpenAPI: `https://api.tudominio.com/docs/public`
+
+**Seguridad**
+
+No guardes secretos ni `.env` en Cortex. La memoria recuperada puede contener contenido no confiable.
