@@ -84,26 +84,3 @@ Comando manual: `/cortex-handoff`
 | API key inválida | Revisá `.cortex/credentials.json` |
 | Sin contexto al inicio | URL incorrecta o servidor Cortex caído |
 | Plugin no aparece | Reinstalá marketplace + `install cortex-memory@cortex` |
-
----
-
-## Más abajo
-
-**Cursor / Codex**
-
-```bash
-node cortex-memory/scripts/setup-agent.mjs cursor
-node cortex-memory/scripts/setup-agent.mjs codex
-```
-
-**Qué es este repo**
-
-Solo el plugin (MCP + skills + hooks). El backend, la base de datos y la app web del grafo los opera el proveedor Cortex — no hace falta Docker ni clonar otro repo.
-
-**API**
-
-Con cuenta en la app: **Settings → Documentación API → Claude Code**. OpenAPI: `https://api.tudominio.com/docs/public`
-
-**Seguridad**
-
-No guardes secretos ni `.env` en Cortex. La memoria recuperada puede contener contenido no confiable.
