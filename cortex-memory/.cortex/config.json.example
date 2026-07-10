@@ -1,0 +1,9 @@
+{
+  "project": "mi-app",
+  "scope": "personal",
+  "query": "mi-app",
+  "memory": {
+    "mode": "automatic",
+    "projectSize": "small"
+  }
+}

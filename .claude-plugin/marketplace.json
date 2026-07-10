@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "cortex",
+  "description": "Cortex Memory — persistent structured memory for Claude Code.",
+  "owner": {
+    "name": "Onix Cortex"
+  },
+  "plugins": [
+    {
+      "name": "cortex-memory",
+      "description": "Persistent structured memory for Claude Code, stored remotely in Cortex.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Onix Cortex"
+      },
+      "source": "./cortex-memory",
+      "category": "productivity"
+    }
+  ]
+}

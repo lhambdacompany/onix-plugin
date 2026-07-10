@@ -1,0 +1,87 @@
+{
+  "description": "Recall Cortex context at startup; checkpoint before/after compact; handoff before stop.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/session-start.mjs"],
+            "timeout": 15,
+            "statusMessage": "Recuperando contexto de Cortex"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/pre-compact.mjs"],
+            "async": true,
+            "timeout": 20,
+            "statusMessage": "Guardando checkpoint en Cortex"
+          }
+        ]
+      },
+      {
+        "matcher": "manual",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/pre-compact.mjs"],
+            "async": true,
+            "timeout": 20,
+            "statusMessage": "Guardando checkpoint en Cortex"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/post-compact.mjs"],
+            "async": true,
+            "timeout": 20,
+            "statusMessage": "Guardando resumen post-compact en Cortex"
+          }
+        ]
+      },
+      {
+        "matcher": "manual",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/post-compact.mjs"],
+            "async": true,
+            "timeout": 20,
+            "statusMessage": "Guardando resumen post-compact en Cortex"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/stop-check.mjs"],
+            "timeout": 10,
+            "statusMessage": "Verificando handoff en Cortex"
+          }
+        ]
+      }
+    ]
+  }
+}

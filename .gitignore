@@ -1,0 +1,10 @@
+# secrets
+.cortex/credentials.json
+**/credentials.json
+.env
+.env.*
+
+# deps / OS
+node_modules/
+.DS_Store
+Thumbs.db

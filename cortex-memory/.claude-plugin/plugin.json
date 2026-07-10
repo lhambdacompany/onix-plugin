@@ -1,0 +1,8 @@
+{
+  "name": "cortex-memory",
+  "version": "0.1.0",
+  "description": "Persistent, structured Cortex memory for Claude Code through MCP.",
+  "author": {
+    "name": "Cortex"
+  }
+}

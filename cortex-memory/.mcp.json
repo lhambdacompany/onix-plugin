@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "cortex": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/cortex-mcp.mjs"],
+      "env": {
+        "CORTEX_API_URL": "${CORTEX_API_URL:-http://localhost:4000/api/public/v1}"
+      }
+    }
+  }
+}
