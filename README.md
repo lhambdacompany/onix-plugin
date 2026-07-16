@@ -37,7 +37,7 @@ En la carpeta donde trabajás con Claude, creá `.cortex/credentials.json`:
 
 ```json
 {
-  "apiUrl": "https://api.tudominio.com/api/public/v1",
+  "apiUrl": "https://api.onixapp.online/api/public/v1",
   "apiKey": "onx_..."
 }
 ```
@@ -45,7 +45,7 @@ En la carpeta donde trabajás con Claude, creá `.cortex/credentials.json`:
 O con el script (si clonaste este repo):
 
 ```bash
-CORTEX_API_URL=https://api.tudominio.com/api/public/v1 \
+CORTEX_API_URL=https://api.onixapp.online/api/public/v1 \
 CORTEX_API_KEY=onx_tu_clave \
 node cortex-memory/scripts/setup-credentials.mjs
 ```

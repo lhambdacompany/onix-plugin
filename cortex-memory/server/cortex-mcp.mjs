@@ -31058,7 +31058,8 @@ ${input.what.trim()}`);
 ${input.why.trim()}`);
   if (input.where?.trim()) sections.push(`## D\xF3nde
 ${input.where.trim()}`);
-  if (input.learned?.trim()) sections.push(`## Aprendizaje
+  if (input.learned?.trim())
+    sections.push(`## Aprendizaje
 ${input.learned.trim()}`);
   return sections.join("\n\n");
 }
@@ -31162,7 +31163,7 @@ function resolveProjectContext(startDir = getWorkingDir()) {
 }
 
 // src/mcp/cortex-mcp.ts
-var DEFAULT_API_URL = "http://localhost:4000/api/public/v1";
+var DEFAULT_API_URL = "https://api.onixapp.online/api/public/v1";
 var PLUGIN_ROOT = join2(dirname2(fileURLToPath(import.meta.url)), "..");
 var activeSessionId = null;
 function cleanEnv(value) {
@@ -31202,8 +31203,14 @@ function loadCredentials() {
 async function cortex(path, init = {}) {
   const { apiUrl, apiKey } = loadCredentials();
   if (!apiKey?.trim()) {
+    const setup = join2(PLUGIN_ROOT, "scripts", "setup-credentials.mjs");
     throw new Error(
-      "CORTEX_API_KEY missing. Create .cortex/credentials.json in your project (run: node integrations/claude-cortex/scripts/setup-credentials.mjs) or set CORTEX_API_KEY before starting Claude Code."
+      `Cortex is not configured yet \u2014 no API key found.
+1. Sign in at https://app.onixapp.online and create an API key under Settings \u2192 Modo desarrollador \u2192 API Keys.
+2. From your project folder, run:
+     node "${setup}"
+   That writes .cortex/credentials.json (git-ignored) and activates Cortex on the next session.
+Alternatively, set CORTEX_API_KEY before starting Claude Code.`
     );
   }
   const response = await fetch(`${apiUrl}${path}`, {
@@ -31395,9 +31402,7 @@ server.registerTool(
     }
     const ctx = resolveProjectContext(cwd ?? getWorkingDir());
     if (ctx.ambiguous) {
-      warnings.push(
-        `ambiguous_project: ${ctx.availableProjects?.join(", ")}`
-      );
+      warnings.push(`ambiguous_project: ${ctx.availableProjects?.join(", ")}`);
     }
     if (!ctx.configPath) {
       warnings.push("missing_cortex_config");
@@ -31565,7 +31570,9 @@ server.registerTool(
       memoryType: input.memoryType
     }) : input.content ?? "";
     if (!content.trim()) {
-      throw new Error("Provide content or structured what/why/where/learned fields.");
+      throw new Error(
+        "Provide content or structured what/why/where/learned fields."
+      );
     }
     const tags = [
       ...input.tags ?? [],
@@ -31630,7 +31637,9 @@ ${content}` : content;
       }
     }
     if (Object.keys(patch).length === 0) {
-      throw new Error("Nothing to update \u2014 pass title, content, summary, tags, or visibility.");
+      throw new Error(
+        "Nothing to update \u2014 pass title, content, summary, tags, or visibility."
+      );
     }
     return {
       content: [

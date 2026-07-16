@@ -3,9 +3,12 @@
  * Writes .cortex/credentials.json for the Claude plugin (stdio MCP does not
  * inherit shell env vars when the plugin is installed globally).
  *
- * Usage:
- *   node integrations/claude-cortex/scripts/setup-credentials.mjs
- *   CORTEX_API_KEY=onx_... node integrations/claude-cortex/scripts/setup-credentials.mjs
+ * Run from the project folder you want Cortex to remember:
+ *   node "<plugin>/scripts/setup-credentials.mjs"
+ *   CORTEX_API_KEY=onx_... node "<plugin>/scripts/setup-credentials.mjs"
+ *
+ * Installed from the marketplace, <plugin> is
+ * ~/.claude/plugins/cache/cortex/cortex-memory/<version>/
  */
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, basename } from 'node:path';
@@ -24,7 +27,7 @@ const pluginFile = join(
 
 const apiUrl =
   process.env.CORTEX_API_URL?.trim() ??
-  'http://localhost:4000/api/public/v1';
+  'https://api.onixapp.online/api/public/v1';
 
 async function prompt(question) {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
@@ -49,6 +52,13 @@ if (!apiKey?.startsWith('onx_')) {
 mkdirSync(dir, { recursive: true });
 const payload = JSON.stringify({ apiUrl, apiKey }, null, 2) + '\n';
 writeFileSync(file, payload, 'utf8');
+
+// We just wrote an API key into the user's repo. Ignore it here rather than
+// trusting every project to already have a rule for a path we invented.
+const ignoreFile = join(dir, '.gitignore');
+if (!existsSync(ignoreFile)) {
+  writeFileSync(ignoreFile, 'credentials.json\n', 'utf8');
+}
 writeFileSync(
   configFile,
   JSON.stringify(
@@ -62,11 +72,11 @@ writeFileSync(
   ) + '\n',
   'utf8',
 );
-try {
-  mkdirSync(join(pluginFile, '..'), { recursive: true });
+// Monorepo convenience copy — ONLY when that layout already exists. Creating
+// the directory would plant an `integrations/claude-cortex/` folder holding the
+// user's API key inside any project that runs this script.
+if (existsSync(join(pluginFile, '..'))) {
   writeFileSync(pluginFile, payload, 'utf8');
-} catch {
-  // optional when script runs outside the monorepo layout
 }
 
 console.log('\nCredenciales guardadas en:');

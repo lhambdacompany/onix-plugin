@@ -1,7 +1,10 @@
 import { loadCredentials } from '../lib/credentials.mjs';
-import { memoryModeDescription } from '../lib/memory-config.mjs';
+import {
+  memoryModeDescription,
+  resolveMemorySettings,
+} from '../lib/memory-config.mjs';
 import { MEMORY_PROTOCOL_SNIPPET } from '../lib/memory-template.mjs';
-import { findCortexConfig, resolveMemorySettings, resolveSession } from '../lib/project-config.mjs';
+import { findCortexConfig, resolveSession } from '../lib/project-config.mjs';
 
 let raw = '';
 for await (const chunk of process.stdin) raw += chunk;

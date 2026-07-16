@@ -3,7 +3,10 @@ import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_API_URL = 'http://localhost:4000/api/public/v1';
+// Hosted Cortex. Self-hosters override it in credentials.json or
+// CORTEX_API_URL — both win over this. A localhost default only ever worked
+// for someone running the backend themselves, which no plugin user does.
+const DEFAULT_API_URL = 'https://api.onixapp.online/api/public/v1';
 const PLUGIN_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 /**

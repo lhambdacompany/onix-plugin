@@ -72,7 +72,7 @@ Abrí una terminal **en la carpeta de tu proyecto** (donde trabajás con Claude)
 node cortex-memory/scripts/setup-credentials.mjs
 
 # O con URL de API explícita:
-CORTEX_API_URL=https://api.tudominio.com/api/public/v1 \
+CORTEX_API_URL=https://api.onixapp.online/api/public/v1 \
 CORTEX_API_KEY=onx_tu_clave \
 node cortex-memory/scripts/setup-credentials.mjs
 ```
@@ -81,7 +81,7 @@ Esto crea `.cortex/credentials.json` (agregalo a `.gitignore`):
 
 ```json
 {
-  "apiUrl": "https://api.tudominio.com/api/public/v1",
+  "apiUrl": "https://api.onixapp.online/api/public/v1",
   "apiKey": "onx_..."
 }
 ```
@@ -236,7 +236,7 @@ Ahí verás los pasos de instalación con la **Base URL** de producción ya conf
 el modelo SaaS (plugin público / backend privado) y la referencia de endpoints:
 `/context`, `/timeline`, `/stats`, `/review`, `/conflicts/judge`, etc.
 
-OpenAPI (Swagger): `https://api.tudominio.com/docs/public`
+OpenAPI (Swagger): `https://api.onixapp.online/docs/public`
 
 ---
 

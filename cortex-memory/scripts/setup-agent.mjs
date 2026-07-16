@@ -96,7 +96,7 @@ function setupCursor() {
         env: {
           CORTEX_API_URL:
             process.env.CORTEX_API_URL?.trim() ??
-            'http://localhost:4000/api/public/v1',
+            'https://api.onixapp.online/api/public/v1',
         },
       },
     },
