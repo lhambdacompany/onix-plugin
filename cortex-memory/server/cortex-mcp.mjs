@@ -31228,18 +31228,20 @@ Alternatively, set CORTEX_API_KEY before starting Claude Code.`
     );
   return body.data;
 }
-async function saveNotePayload(input) {
+async function saveNotePayload(input, searchTitle) {
   const project = input.sourceProject || resolveProjectContext().project;
   const note = await cortex("/notes", {
     method: "POST",
     headers: { "Idempotency-Key": crypto.randomUUID() },
     body: JSON.stringify(input)
   });
-  const title = input.title ?? "";
+  const title = searchTitle ?? input.title ?? "";
+  const createdId = note?.id;
   const candidates = await cortex(
     `/conflicts?${new URLSearchParams({
       project,
-      title
+      title,
+      ...createdId ? { excludeId: createdId } : {}
     })}`
   );
   return {
@@ -31594,7 +31596,7 @@ server.registerTool(
       content: [
         {
           type: "text",
-          text: JSON.stringify(await saveNotePayload(payload))
+          text: JSON.stringify(await saveNotePayload(payload, input.title))
         }
       ]
     };
