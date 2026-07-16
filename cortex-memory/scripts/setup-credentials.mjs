@@ -59,19 +59,25 @@ const ignoreFile = join(dir, '.gitignore');
 if (!existsSync(ignoreFile)) {
   writeFileSync(ignoreFile, 'credentials.json\n', 'utf8');
 }
-writeFileSync(
-  configFile,
-  JSON.stringify(
-    {
-      project: basename(projectDir),
-      scope: 'personal',
-      query: basename(projectDir),
-    },
-    null,
-    2,
-  ) + '\n',
-  'utf8',
-);
+// Seed config.json, but never clobber one that already exists: it carries
+// memory.mode / memory.projectSize, and silently resetting those turns off a
+// project's compaction checkpoints without saying so. Re-running setup to
+// rotate a key must not change how memory behaves.
+if (!existsSync(configFile)) {
+  writeFileSync(
+    configFile,
+    JSON.stringify(
+      {
+        project: basename(projectDir),
+        scope: 'personal',
+        query: basename(projectDir),
+      },
+      null,
+      2,
+    ) + '\n',
+    'utf8',
+  );
+}
 // Monorepo convenience copy — ONLY when that layout already exists. Creating
 // the directory would plant an `integrations/claude-cortex/` folder holding the
 // user's API key inside any project that runs this script.
