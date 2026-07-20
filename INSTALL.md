@@ -48,7 +48,7 @@ Verificá la conexión:
 /mcp
 ```
 
-Deberías ver `plugin:cortex-memory:cortex` con **14 tools** conectadas.
+Deberías ver `plugin:cortex-memory:cortex` con **19 tools** conectadas.
 
 ### 2. Crear cuenta y API Key
 
@@ -59,6 +59,12 @@ Deberías ver `plugin:cortex-memory:cortex` con **14 tools** conectadas.
 
 ```text
 notes:read, notes:write, relations:read, relations:write, search:read, context:read
+```
+
+Si además querés indexar código (ecosistema **Proyecto**, ver más abajo), sumá:
+
+```text
+project:read, project:write, project:index
 ```
 
 Copiá la clave (`onx_...`). **Solo se muestra una vez.**
@@ -134,9 +140,10 @@ Al iniciar la sesión:
 
 | Componente | Función |
 |------------|---------|
-| **MCP** (14 tools) | `cortex_save_note`, `cortex_get_context`, `cortex_finalize_session`, etc. |
+| **MCP** (19 tools) | `cortex_save_note`, `cortex_get_context`, `cortex_finalize_session`, etc. |
 | **Skill `cortex-memory`** | Protocolo: cuándo guardar, formato what/why/where/learned |
 | **Skill `cortex-handoff`** | Comando `/cortex-handoff` para guardado manual |
+| **Skill `cortex-project`** | Grafo de código: cuándo consultarlo en vez de releer archivos |
 | **Hooks** | Contexto al abrir sesión, checkpoints al compactar, nudge de handoff |
 
 ### Flujo de una sesión típica

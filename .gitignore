@@ -6,5 +6,10 @@
 
 # deps / OS
 node_modules/
+# ...except the vendored typescript the MCP server needs at runtime — esbuild
+# can't bundle it into the ESM output (see cortex-mcp build script), so a
+# fresh `/plugin install` needs this shipped in the repo, not installed.
+!cortex-memory/server/node_modules/
+!cortex-memory/server/node_modules/**
 .DS_Store
 Thumbs.db

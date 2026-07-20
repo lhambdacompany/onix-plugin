@@ -1516,8 +1516,8 @@ var require_dataType = __commonJS({
       return types;
     }
     exports.getSchemaTypes = getSchemaTypes;
-    function getJSONTypes(ts) {
-      const types = Array.isArray(ts) ? ts : ts ? [ts] : [];
+    function getJSONTypes(ts2) {
+      const types = Array.isArray(ts2) ? ts2 : ts2 ? [ts2] : [];
       if (types.every(rules_1.isJSONType))
         return types;
       throw new Error("type must be JSONType or JSONType[]: " + types.join(","));
@@ -2559,18 +2559,18 @@ var require_validate = __commonJS({
       });
       narrowSchemaTypes(it, types);
     }
-    function checkMultipleTypes(it, ts) {
-      if (ts.length > 1 && !(ts.length === 2 && ts.includes("null"))) {
+    function checkMultipleTypes(it, ts2) {
+      if (ts2.length > 1 && !(ts2.length === 2 && ts2.includes("null"))) {
         strictTypesError(it, "use allowUnionTypes to allow union type keyword");
       }
     }
-    function checkKeywordTypes(it, ts) {
+    function checkKeywordTypes(it, ts2) {
       const rules = it.self.RULES.all;
       for (const keyword in rules) {
         const rule = rules[keyword];
         if (typeof rule == "object" && (0, applicability_1.shouldUseRule)(it.schema, rule)) {
           const { type } = rule.definition;
-          if (type.length && !type.some((t) => hasApplicableType(ts, t))) {
+          if (type.length && !type.some((t) => hasApplicableType(ts2, t))) {
             strictTypesError(it, `missing type "${type.join(",")}" for keyword "${keyword}"`);
           }
         }
@@ -2579,18 +2579,18 @@ var require_validate = __commonJS({
     function hasApplicableType(schTs, kwdT) {
       return schTs.includes(kwdT) || kwdT === "number" && schTs.includes("integer");
     }
-    function includesType(ts, t) {
-      return ts.includes(t) || t === "integer" && ts.includes("number");
+    function includesType(ts2, t) {
+      return ts2.includes(t) || t === "integer" && ts2.includes("number");
     }
     function narrowSchemaTypes(it, withTypes) {
-      const ts = [];
+      const ts2 = [];
       for (const t of it.dataTypes) {
         if (includesType(withTypes, t))
-          ts.push(t);
+          ts2.push(t);
         else if (withTypes.includes("integer") && t === "number")
-          ts.push("integer");
+          ts2.push("integer");
       }
-      it.dataTypes = ts;
+      it.dataTypes = ts2;
     }
     function strictTypesError(it, msg) {
       const schemaPath = it.schemaEnv.baseId + it.errSchemaPath;
@@ -3647,49 +3647,49 @@ var require_fast_uri = __commonJS({
       schemelessOptions.skipEscape = true;
       return serialize(resolved, schemelessOptions);
     }
-    function resolveComponent(base, relative, options, skipNormalization) {
+    function resolveComponent(base, relative2, options, skipNormalization) {
       const target = {};
       if (!skipNormalization) {
         base = parse3(serialize(base, options), options);
-        relative = parse3(serialize(relative, options), options);
+        relative2 = parse3(serialize(relative2, options), options);
       }
       options = options || {};
-      if (!options.tolerant && relative.scheme) {
-        target.scheme = relative.scheme;
-        target.userinfo = relative.userinfo;
-        target.host = relative.host;
-        target.port = relative.port;
-        target.path = removeDotSegments(relative.path || "");
-        target.query = relative.query;
+      if (!options.tolerant && relative2.scheme) {
+        target.scheme = relative2.scheme;
+        target.userinfo = relative2.userinfo;
+        target.host = relative2.host;
+        target.port = relative2.port;
+        target.path = removeDotSegments(relative2.path || "");
+        target.query = relative2.query;
       } else {
-        if (relative.userinfo !== void 0 || relative.host !== void 0 || relative.port !== void 0) {
-          target.userinfo = relative.userinfo;
-          target.host = relative.host;
-          target.port = relative.port;
-          target.path = removeDotSegments(relative.path || "");
-          target.query = relative.query;
+        if (relative2.userinfo !== void 0 || relative2.host !== void 0 || relative2.port !== void 0) {
+          target.userinfo = relative2.userinfo;
+          target.host = relative2.host;
+          target.port = relative2.port;
+          target.path = removeDotSegments(relative2.path || "");
+          target.query = relative2.query;
         } else {
-          if (!relative.path) {
+          if (!relative2.path) {
             target.path = base.path;
-            if (relative.query !== void 0) {
-              target.query = relative.query;
+            if (relative2.query !== void 0) {
+              target.query = relative2.query;
             } else {
               target.query = base.query;
             }
           } else {
-            if (relative.path[0] === "/") {
-              target.path = removeDotSegments(relative.path);
+            if (relative2.path[0] === "/") {
+              target.path = removeDotSegments(relative2.path);
             } else {
               if ((base.userinfo !== void 0 || base.host !== void 0 || base.port !== void 0) && !base.path) {
-                target.path = "/" + relative.path;
+                target.path = "/" + relative2.path;
               } else if (!base.path) {
-                target.path = relative.path;
+                target.path = relative2.path;
               } else {
-                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative.path;
+                target.path = base.path.slice(0, base.path.lastIndexOf("/") + 1) + relative2.path;
               }
               target.path = removeDotSegments(target.path);
             }
-            target.query = relative.query;
+            target.query = relative2.query;
           }
           target.userinfo = base.userinfo;
           target.host = base.host;
@@ -3697,7 +3697,7 @@ var require_fast_uri = __commonJS({
         }
         target.scheme = base.scheme;
       }
-      target.fragment = relative.fragment;
+      target.fragment = relative2.fragment;
       return target;
     }
     function equal(uriA, uriB, options) {
@@ -6889,9 +6889,9 @@ var require_dist = __commonJS({
 });
 
 // src/mcp/cortex-mcp.ts
-import { existsSync as existsSync2, readFileSync as readFileSync2 } from "node:fs";
+import { existsSync as existsSync2, readFileSync as readFileSync3 } from "node:fs";
 import { homedir } from "node:os";
-import { join as join2, dirname as dirname2 } from "node:path";
+import { join as join3, dirname as dirname3 } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // node_modules/.pnpm/zod@4.4.3/node_modules/zod/v3/helpers/util.js
@@ -31162,9 +31162,325 @@ function resolveProjectContext(startDir = getWorkingDir()) {
   };
 }
 
+// src/mcp/project-index.ts
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { readFileSync as readFileSync2 } from "node:fs";
+import { dirname as dirname2, extname, join as join2, relative, sep } from "node:path";
+import * as ts from "typescript";
+var SOURCE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx"];
+function git(gitRoot, args) {
+  return execFileSync("git", args, { cwd: gitRoot, encoding: "utf8" }).trim();
+}
+function resolveGitRoot(cwd) {
+  try {
+    return git(cwd, ["rev-parse", "--show-toplevel"]);
+  } catch {
+    throw new Error(
+      "cortex_project_index requires a git repository \u2014 no .git found walking up from this directory."
+    );
+  }
+}
+function currentCommit(gitRoot) {
+  return git(gitRoot, ["rev-parse", "HEAD"]);
+}
+function isSourceFile(path) {
+  return SOURCE_EXTENSIONS.includes(extname(path));
+}
+function untrackedSourceFiles(gitRoot) {
+  const out = git(gitRoot, ["ls-files", "--others", "--exclude-standard"]);
+  return out.split("\n").filter((f) => f && isSourceFile(f));
+}
+function listAllSourceFiles(gitRoot) {
+  const tracked = git(gitRoot, ["ls-files"]).split("\n").filter((f) => f && isSourceFile(f));
+  return [.../* @__PURE__ */ new Set([...tracked, ...untrackedSourceFiles(gitRoot)])];
+}
+function diffSince(gitRoot, baseCommit) {
+  const out = git(gitRoot, ["diff", "--name-status", baseCommit]);
+  const changed = /* @__PURE__ */ new Set();
+  const removed = /* @__PURE__ */ new Set();
+  for (const line of out.split("\n").filter(Boolean)) {
+    const parts = line.split("	");
+    const status = parts[0][0];
+    if (status === "R" || status === "C") {
+      if (isSourceFile(parts[1])) removed.add(parts[1]);
+      if (isSourceFile(parts[2])) changed.add(parts[2]);
+    } else if (status === "D") {
+      if (isSourceFile(parts[1])) removed.add(parts[1]);
+    } else {
+      if (isSourceFile(parts[1])) changed.add(parts[1]);
+    }
+  }
+  for (const f of untrackedSourceFiles(gitRoot)) changed.add(f);
+  return { changed: [...changed], removed: [...removed] };
+}
+function sha256(text) {
+  return createHash("sha256").update(text).digest("hex");
+}
+function toPosixPath(path) {
+  return path.split(sep).join("/");
+}
+function moduleChainRefs(relFilePath) {
+  const dir = dirname2(relFilePath);
+  if (dir === ".") return [];
+  const segments = dir.split("/");
+  const refs = [];
+  for (let i = 0; i < segments.length; i++) {
+    const path = segments.slice(0, i + 1).join("/");
+    refs.push({ path, name: segments[i], startLine: 0 });
+  }
+  return refs;
+}
+function classifyFunctionLike(name, isTsx) {
+  if (/^use[A-Z0-9]/.test(name)) return "HOOK";
+  if (isTsx && /^[A-Z]/.test(name)) return "COMPONENT";
+  return "FUNCTION";
+}
+function isExported(node) {
+  return (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Export) !== 0;
+}
+function lineOf(sourceFile, pos) {
+  return sourceFile.getLineAndCharacterOfPosition(pos).line + 1;
+}
+function firstLine(text, maxLen = 200) {
+  const line = text.split("\n")[0].trim();
+  return line.length > maxLen ? `${line.slice(0, maxLen)}...` : line;
+}
+function extractFile(gitRoot, relPath) {
+  const absPath = join2(gitRoot, relPath);
+  const content = readFileSync2(absPath, "utf8");
+  const isTsx = relPath.endsWith(".tsx") || relPath.endsWith(".jsx");
+  const sourceFile = ts.createSourceFile(
+    relPath,
+    content,
+    ts.ScriptTarget.Latest,
+    true,
+    isTsx ? ts.ScriptKind.TSX : ts.ScriptKind.TS
+  );
+  const fileName = relPath.split("/").pop() ?? relPath;
+  const fileRef = { path: relPath, name: fileName, startLine: 0 };
+  const moduleChain = moduleChainRefs(relPath);
+  const nodes = [];
+  const edges = [];
+  const locals = [];
+  const importEdgeTargets = /* @__PURE__ */ new Set();
+  const importBindings = /* @__PURE__ */ new Map();
+  const classFieldTypes = /* @__PURE__ */ new Map();
+  for (let i = 0; i < moduleChain.length; i++) {
+    const ref = moduleChain[i];
+    nodes.push({
+      ...ref,
+      parentRef: i > 0 ? moduleChain[i - 1] : void 0,
+      kind: "MODULE",
+      contentHash: sha256(ref.path)
+    });
+  }
+  nodes.push({
+    ...fileRef,
+    parentRef: moduleChain.at(-1),
+    kind: "FILE",
+    endLine: sourceFile.getLineAndCharacterOfPosition(content.length).line + 1,
+    contentHash: sha256(content),
+    language: isTsx ? "tsx" : relPath.endsWith(".ts") ? "ts" : "js"
+  });
+  const CALLABLE_KINDS = /* @__PURE__ */ new Set(["FUNCTION", "METHOD", "HOOK", "COMPONENT"]);
+  function pushSymbol(name, symbolKind, node, bodyNode, exported, parentRef, heritage = {}, className) {
+    const ref = { path: relPath, name, startLine: lineOf(sourceFile, node.getStart(sourceFile)) };
+    nodes.push({
+      ...ref,
+      parentRef,
+      kind: "SYMBOL",
+      symbolKind,
+      endLine: lineOf(sourceFile, node.getEnd()),
+      signature: firstLine(node.getText(sourceFile)),
+      contentHash: sha256(node.getText(sourceFile)),
+      exported
+    });
+    locals.push({ name, ref, bodyNode, callable: CALLABLE_KINDS.has(symbolKind), className, heritage });
+  }
+  function constructorFieldTypes(classNode) {
+    const fields = /* @__PURE__ */ new Map();
+    const ctor = classNode.members.find(ts.isConstructorDeclaration);
+    if (!ctor) return fields;
+    for (const param of ctor.parameters) {
+      const isField = (ts.getCombinedModifierFlags(param) & (ts.ModifierFlags.Private | ts.ModifierFlags.Public | ts.ModifierFlags.Protected | ts.ModifierFlags.Readonly)) !== 0;
+      if (!isField || !ts.isIdentifier(param.name) || !param.type) continue;
+      if (ts.isTypeReferenceNode(param.type) && ts.isIdentifier(param.type.typeName)) {
+        fields.set(param.name.text, param.type.typeName.text);
+      }
+    }
+    return fields;
+  }
+  function heritageNames(node) {
+    const result = {};
+    for (const clause of node.heritageClauses ?? []) {
+      const names = clause.types.map((t) => ts.isIdentifier(t.expression) ? t.expression.text : t.expression.getText(sourceFile)).filter(Boolean);
+      if (clause.token === ts.SyntaxKind.ExtendsKeyword) result.extends = names;
+      if (clause.token === ts.SyntaxKind.ImplementsKeyword) result.implements = names;
+    }
+    return result;
+  }
+  for (const stmt of sourceFile.statements) {
+    if (ts.isImportDeclaration(stmt) && ts.isStringLiteral(stmt.moduleSpecifier)) {
+      const spec = stmt.moduleSpecifier.text;
+      if (spec.startsWith(".")) {
+        const resolved = resolveRelativeImport(gitRoot, relPath, spec);
+        if (resolved) {
+          importEdgeTargets.add(resolved);
+          const clause = stmt.importClause;
+          if (clause?.name) importBindings.set(clause.name.text, resolved);
+          if (clause?.namedBindings && ts.isNamedImports(clause.namedBindings)) {
+            for (const el of clause.namedBindings.elements) {
+              importBindings.set(el.name.text, resolved);
+            }
+          }
+        }
+      }
+      continue;
+    }
+    if (ts.isClassDeclaration(stmt) && stmt.name && isExported(stmt)) {
+      const className = stmt.name.text;
+      const symbolKind = className.endsWith("Service") ? "SERVICE" : "CLASS";
+      const classRef = { path: relPath, name: className, startLine: lineOf(sourceFile, stmt.getStart(sourceFile)) };
+      pushSymbol(className, symbolKind, stmt, stmt, true, fileRef, heritageNames(stmt));
+      classFieldTypes.set(className, constructorFieldTypes(stmt));
+      for (const member of stmt.members) {
+        if (ts.isMethodDeclaration(member) && member.name && ts.isIdentifier(member.name)) {
+          pushSymbol(member.name.text, "METHOD", member, member, false, classRef, {}, className);
+        }
+      }
+      continue;
+    }
+    if (ts.isInterfaceDeclaration(stmt) && isExported(stmt)) {
+      const name = stmt.name.text;
+      const symbolKind = name.endsWith("Dto") ? "DTO" : "INTERFACE";
+      pushSymbol(name, symbolKind, stmt, stmt, true, fileRef, heritageNames(stmt));
+      continue;
+    }
+    if (ts.isFunctionDeclaration(stmt) && stmt.name && isExported(stmt)) {
+      const name = stmt.name.text;
+      pushSymbol(name, classifyFunctionLike(name, isTsx), stmt, stmt, true, fileRef);
+      continue;
+    }
+    if (ts.isVariableStatement(stmt) && isExported(stmt)) {
+      for (const decl of stmt.declarationList.declarations) {
+        if (!ts.isIdentifier(decl.name) || !decl.initializer) continue;
+        if (ts.isArrowFunction(decl.initializer) || ts.isFunctionExpression(decl.initializer)) {
+          const name = decl.name.text;
+          pushSymbol(name, classifyFunctionLike(name, isTsx), decl, decl.initializer, true, fileRef);
+        }
+      }
+    }
+  }
+  for (const targetPath of importEdgeTargets) {
+    const targetName = targetPath.split("/").pop() ?? targetPath;
+    edges.push({
+      source: fileRef,
+      target: { path: targetPath, name: targetName, startLine: 0 },
+      type: "IMPORTS",
+      confidence: "EXTRACTED"
+    });
+  }
+  const localsByName = new Map(locals.map((l) => [l.name, l]));
+  function resolveRef2(name) {
+    const local = localsByName.get(name);
+    if (local) return { ref: local.ref, confidence: "EXTRACTED" };
+    const path = importBindings.get(name);
+    return path ? { ref: { path, name }, confidence: "INFERRED" } : void 0;
+  }
+  function resolveTypeFilePath(typeName) {
+    if (localsByName.has(typeName)) return relPath;
+    return importBindings.get(typeName);
+  }
+  for (const local of locals) {
+    for (const name of local.heritage.extends ?? []) {
+      const resolved = resolveRef2(name);
+      if (resolved) edges.push({ source: local.ref, target: resolved.ref, type: "EXTENDS", confidence: resolved.confidence });
+    }
+    for (const name of local.heritage.implements ?? []) {
+      const resolved = resolveRef2(name);
+      if (resolved) edges.push({ source: local.ref, target: resolved.ref, type: "IMPLEMENTS", confidence: resolved.confidence });
+    }
+    if (!local.callable) continue;
+    const fieldTypes = local.className ? classFieldTypes.get(local.className) : void 0;
+    const seenCalls = /* @__PURE__ */ new Set();
+    const visit = (node) => {
+      if (ts.isCallExpression(node)) {
+        let target;
+        let confidence = "EXTRACTED";
+        if (ts.isIdentifier(node.expression)) {
+          const calleeName = node.expression.text;
+          if (calleeName !== local.name) {
+            const resolved = resolveRef2(calleeName);
+            target = resolved?.ref;
+            confidence = resolved?.confidence ?? "EXTRACTED";
+          }
+        } else if (ts.isPropertyAccessExpression(node.expression) && ts.isPropertyAccessExpression(node.expression.expression) && node.expression.expression.expression.kind === ts.SyntaxKind.ThisKeyword && fieldTypes) {
+          const fieldName = node.expression.expression.name.text;
+          const methodName = node.expression.name.text;
+          const typeName = fieldTypes.get(fieldName);
+          const typePath = typeName ? resolveTypeFilePath(typeName) : void 0;
+          if (typePath) {
+            target = { path: typePath, name: methodName };
+            confidence = "INFERRED";
+          }
+        } else if (ts.isPropertyAccessExpression(node.expression) && node.expression.expression.kind === ts.SyntaxKind.ThisKeyword) {
+          const calleeName = node.expression.name.text;
+          if (calleeName !== local.name) target = localsByName.get(calleeName)?.ref;
+        }
+        if (target && !seenCalls.has(`${target.path}|${target.name}`)) {
+          edges.push({ source: local.ref, target, type: "CALLS", confidence });
+          seenCalls.add(`${target.path}|${target.name}`);
+        }
+      }
+      ts.forEachChild(node, visit);
+    };
+    visit(local.bodyNode);
+  }
+  return { nodes, edges };
+}
+function resolveRelativeImport(gitRoot, fromRelPath, spec) {
+  const baseDir = dirname2(join2(gitRoot, fromRelPath));
+  const target = join2(baseDir, spec);
+  const candidates = [
+    target,
+    ...SOURCE_EXTENSIONS.map((ext) => target + ext),
+    ...SOURCE_EXTENSIONS.map((ext) => join2(target, `index${ext}`))
+  ];
+  for (const candidate of candidates) {
+    const rel = toPosixPath(relative(gitRoot, candidate));
+    if (!isSourceFile(rel)) continue;
+    try {
+      readFileSync2(candidate, "utf8");
+      return rel;
+    } catch {
+      continue;
+    }
+  }
+  return null;
+}
+function buildIndexBatch(gitRoot, baseCommit) {
+  const isFirstIndex = !baseCommit;
+  const { changed, removed } = isFirstIndex ? { changed: listAllSourceFiles(gitRoot), removed: [] } : diffSince(gitRoot, baseCommit);
+  const nodes = [];
+  const edges = [];
+  const seenNodeKeys = /* @__PURE__ */ new Set();
+  for (const relPath of changed) {
+    const extracted = extractFile(gitRoot, relPath);
+    for (const node of extracted.nodes) {
+      const key = `${node.path}|${node.name}|${node.startLine}`;
+      if (seenNodeKeys.has(key)) continue;
+      seenNodeKeys.add(key);
+      nodes.push(node);
+    }
+    edges.push(...extracted.edges);
+  }
+  return { commit: currentCommit(gitRoot), removedPaths: removed, nodes, edges };
+}
+
 // src/mcp/cortex-mcp.ts
 var DEFAULT_API_URL = "https://api.onixapp.online/api/public/v1";
-var PLUGIN_ROOT = join2(dirname2(fileURLToPath(import.meta.url)), "..");
+var PLUGIN_ROOT = join3(dirname3(fileURLToPath(import.meta.url)), "..");
 var activeSessionId = null;
 function cleanEnv(value) {
   const trimmed = value?.trim();
@@ -31178,18 +31494,18 @@ function loadCredentials() {
     apiKey: cleanEnv(process.env.CORTEX_API_KEY)
   };
   const candidates = [
-    join2(PLUGIN_ROOT, "credentials.json"),
+    join3(PLUGIN_ROOT, "credentials.json"),
     process.env.CORTEX_CREDENTIALS_FILE?.trim(),
-    process.env.CLAUDE_PLUGIN_ROOT ? join2(process.env.CLAUDE_PLUGIN_ROOT, "credentials.json") : void 0,
-    process.env.CLAUDE_PROJECT_DIR ? join2(process.env.CLAUDE_PROJECT_DIR, ".cortex", "credentials.json") : void 0,
-    process.env.CLAUDE_PLUGIN_DATA ? join2(process.env.CLAUDE_PLUGIN_DATA, "credentials.json") : void 0,
-    join2(homedir(), ".config", "cortex", "credentials.json")
+    process.env.CLAUDE_PLUGIN_ROOT ? join3(process.env.CLAUDE_PLUGIN_ROOT, "credentials.json") : void 0,
+    process.env.CLAUDE_PROJECT_DIR ? join3(process.env.CLAUDE_PROJECT_DIR, ".cortex", "credentials.json") : void 0,
+    process.env.CLAUDE_PLUGIN_DATA ? join3(process.env.CLAUDE_PLUGIN_DATA, "credentials.json") : void 0,
+    join3(homedir(), ".config", "cortex", "credentials.json")
   ].filter((p) => Boolean(p));
   let fromFile = {};
   for (const path of candidates) {
     if (!existsSync2(path)) continue;
     try {
-      fromFile = JSON.parse(readFileSync2(path, "utf8"));
+      fromFile = JSON.parse(readFileSync3(path, "utf8"));
       break;
     } catch {
     }
@@ -31203,7 +31519,7 @@ function loadCredentials() {
 async function cortex(path, init = {}) {
   const { apiUrl, apiKey } = loadCredentials();
   if (!apiKey?.trim()) {
-    const setup = join2(PLUGIN_ROOT, "scripts", "setup-credentials.mjs");
+    const setup = join3(PLUGIN_ROOT, "scripts", "setup-credentials.mjs");
     throw new Error(
       `Cortex is not configured yet \u2014 no API key found.
 1. Sign in at https://app.onixapp.online and create an API key under Settings \u2192 Modo desarrollador \u2192 API Keys.
@@ -31746,6 +32062,141 @@ ${nextSteps.map((item) => `- ${item}`).join("\n")}` : ""
               visibility,
               sourceSessionId: sourceSessionId ?? activeSessionId ?? void 0
             })
+          )
+        }
+      ]
+    };
+  }
+);
+server.registerTool(
+  "cortex_project_register",
+  {
+    description: "Register the current git repository as a Proyecto (code knowledge graph) in Cortex. Optional \u2014 cortex_project_index does this automatically on first use.",
+    inputSchema: {
+      name: external_exports.string().max(200).optional(),
+      cwd: external_exports.string().max(500).optional()
+    }
+  },
+  async ({ name, cwd }) => {
+    const dir = cwd ?? getWorkingDir();
+    const gitRoot = resolveGitRoot(dir);
+    const projectName = name ?? resolveProjectContext(dir).project;
+    const project = await cortex("/project", {
+      method: "POST",
+      body: JSON.stringify({ name: projectName, rootPath: gitRoot })
+    });
+    return { content: [{ type: "text", text: JSON.stringify(project) }] };
+  }
+);
+server.registerTool(
+  "cortex_project_index",
+  {
+    description: "Index the current git repository into its Proyecto knowledge graph, incrementally from the last indexed commit. Call after finishing a task, before ending the session, so future tasks can query the graph instead of rereading files.",
+    inputSchema: {
+      name: external_exports.string().max(200).optional(),
+      cwd: external_exports.string().max(500).optional()
+    }
+  },
+  async ({ name, cwd }) => {
+    const dir = cwd ?? getWorkingDir();
+    const gitRoot = resolveGitRoot(dir);
+    const projectName = name ?? resolveProjectContext(dir).project;
+    const project = await cortex("/project", {
+      method: "POST",
+      body: JSON.stringify({ name: projectName, rootPath: gitRoot })
+    });
+    const batch = buildIndexBatch(gitRoot, project.lastIndexedCommit ?? void 0);
+    const updated = await cortex(`/project/${project.id}/index`, {
+      method: "POST",
+      headers: { "Idempotency-Key": crypto.randomUUID() },
+      body: JSON.stringify(batch)
+    });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            project: updated,
+            nodesIndexed: batch.nodes.length,
+            edgesIndexed: batch.edges.length
+          })
+        }
+      ]
+    };
+  }
+);
+server.registerTool(
+  "cortex_project_graph",
+  {
+    description: "Level 1 (relations) of a Proyecto knowledge graph. Expand from a node id, or list root nodes if nodeId is omitted. Prefer this over reading files to learn what imports/calls/extends what.",
+    inputSchema: {
+      projectId: external_exports.string().min(1),
+      nodeId: external_exports.string().optional(),
+      depth: external_exports.number().int().min(1).max(5).optional(),
+      types: external_exports.array(external_exports.enum(["IMPORTS", "CALLS", "EXTENDS", "IMPLEMENTS", "REFERENCES", "EXPORTS"])).optional()
+    }
+  },
+  async ({ projectId, nodeId, depth, types }) => {
+    const params = new URLSearchParams();
+    if (nodeId) params.set("nodeId", nodeId);
+    if (depth) params.set("depth", String(depth));
+    if (types?.length) params.set("types", types.join(","));
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            await cortex(`/project/${encodeURIComponent(projectId)}/graph?${params}`)
+          )
+        }
+      ]
+    };
+  }
+);
+server.registerTool(
+  "cortex_project_nodes",
+  {
+    description: "Level 2 (metadata) or level 3 (+ signature/summary) for explicit node ids from a Proyecto graph \u2014 call after cortex_project_graph to expand what you need.",
+    inputSchema: {
+      projectId: external_exports.string().min(1),
+      ids: external_exports.array(external_exports.string()).min(1),
+      level: external_exports.union([external_exports.literal(2), external_exports.literal(3)]).optional()
+    }
+  },
+  async ({ projectId, ids, level }) => {
+    const params = new URLSearchParams({ ids: ids.join(",") });
+    if (level) params.set("level", String(level));
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            await cortex(`/project/${encodeURIComponent(projectId)}/nodes?${params}`)
+          )
+        }
+      ]
+    };
+  }
+);
+server.registerTool(
+  "cortex_project_search",
+  {
+    description: "Semantic search over exported symbols in a Proyecto knowledge graph \u2014 use to find where something is implemented without grepping.",
+    inputSchema: {
+      projectId: external_exports.string().min(1),
+      query: external_exports.string().max(200),
+      limit: external_exports.number().int().min(1).max(50).optional()
+    }
+  },
+  async ({ projectId, query, limit }) => {
+    const params = new URLSearchParams({ q: query });
+    if (limit) params.set("limit", String(limit));
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            await cortex(`/project/${encodeURIComponent(projectId)}/search?${params}`)
           )
         }
       ]

@@ -15,7 +15,7 @@ Decisiones, bugs y handoffs se guardan en **Cortex** (servidor remoto), no en ar
 /reload-plugins
 ```
 
-Comprobá: `/mcp` → `plugin:cortex-memory:cortex` con **14 tools**.
+Comprobá: `/mcp` → `plugin:cortex-memory:cortex` con **19 tools**.
 
 ---
 
@@ -25,6 +25,12 @@ En la app Cortex: **Settings → Modo desarrollador → API Keys**
 
 ```text
 notes:read, notes:write, relations:read, relations:write, search:read, context:read
+```
+
+Si además querés el ecosistema **Proyecto** (grafo de código, ver abajo), sumá:
+
+```text
+project:read, project:write, project:index
 ```
 
 La clave solo se muestra una vez. Copiala.
@@ -73,6 +79,24 @@ Pasos detallados, configuración, comandos y troubleshooting → **[INSTALL.md](
 | Al cerrar | Handoff para retomar sin re-explicar todo |
 
 Comando manual: `/cortex-handoff`
+
+---
+
+## Ecosistema Proyecto (grafo de código)
+
+Además de la memoria de notas, el plugin indexa tu **repositorio de código**
+(archivos, símbolos, imports, calls, extends/implements) en un grafo
+estructural — para que el agente consulte relaciones en vez de releer
+archivos completos. Medido: ~4.8x menos tokens en promedio en tareas reales.
+
+Tools: `cortex_project_register`, `cortex_project_index`,
+`cortex_project_graph`, `cortex_project_nodes`, `cortex_project_search`.
+
+No hace falta llamarlas a mano — con el scope `project:index` activo, el
+agente indexa solo al terminar una tarea sustancial. Alcance actual:
+TS/JS/TSX/JSX; relaciones cruzando archivos solo en imports directos e
+inyección de dependencias estilo NestJS (marcadas `INFERRED` vs `EXTRACTED`
+para lo verificado en el mismo archivo).
 
 ---
 
